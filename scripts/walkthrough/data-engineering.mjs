@@ -297,10 +297,10 @@ export default [
     id: 'tests',
     group: '工程化',
     title: '测试',
-    nav: '测试 · 17 个用例',
+    nav: '测试 · 21 个用例',
     file: 'packages/core/test/core.test.mjs',
     loc: 170,
-    pitch: '17 个单元测试，覆盖纯函数逻辑和一处真实的时序缺陷。',
+    pitch: '21 个单元测试，覆盖纯函数逻辑和一处真实的时序缺陷。',
     problem: [
       `测试的<b>范围划分</b>是这个文件最值得讲的地方：`,
       {

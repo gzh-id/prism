@@ -5,7 +5,7 @@
 > 第一次上手请看 **[docs/使用手册.md](./docs/使用手册.md)** —— 从「这到底是什么」到「每一步点哪里」都有写。
 > 想完整理解这个项目（为什么做、怎么实现、面试怎么讲）看 **[docs/项目总览.md](./docs/项目总览.md)**。
 
-一个 5.38KB 的零依赖采集 SDK + 一个纯本地运行的 React 分析看板。**数据全程不出浏览器**，存在 IndexedDB 里，需要分享时导出成一份压缩报告。
+一个 6.07KB 的零依赖采集 SDK + 一个纯本地运行的 React 分析看板。**数据全程不出浏览器**，存在 IndexedDB 里，需要分享时导出成一份压缩报告。
 
 ## 它解决什么问题
 
@@ -88,7 +88,7 @@ scripts/            体积卡口 + 本地静态服务
 npm run build           # 构建全部
 npm run build:core      # 只构建 SDK
 npm run build:dashboard # 只构建看板
-npm test                # 单元测试（17 个）
+npm test                # 单元测试（21 个）
 npm run size            # 体积卡口（8KB 预算）
 npm run serve           # 本地演示服务
 npm run demo:assets     # 重新生成演示站点用的图片（零依赖手写 PNG 编码器）
@@ -102,10 +102,10 @@ node packages/cli/src/index.ts sourcemap packages/core/dist/index.global.js.map 
 
 | 产物 | 原始 | gzip | 8KB 预算占用 |
 |---|---|---|---|
-| ESM（现代工程） | 14.36 KB | **5.38 KB** | 67.2% |
-| IIFE（一行 script） | 13.68 KB | **5.23 KB** | 65.4% |
+| ESM（现代工程） | 16.44 KB | **6.07 KB** | 75.8% |
+| IIFE（一行 script） | 16.40 KB | **6.04 KB** | 75.5% |
 
-单元测试 12 个全绿，覆盖环形缓冲、采样稳定性、脱敏、指标分档、报告压缩往返、会话聚合。
+单元测试 21 个全绿，覆盖环形缓冲、采样稳定性、脱敏、指标分档、报告压缩往返、会话聚合、上报时机收口。
 
 ## 单文件离线报告
 
