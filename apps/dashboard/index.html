@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prism · 前端观测看板</title>
+<style>
+:root {
+  --green: #1d9e75;
+  --green-soft: #e1f5ee;
+  --purple: #534ab7;
+  --purple-soft: #eeedfe;
+  --ink: #1a1a1a;
+  --muted: #6b7280;
+  --line: #e8e8ef;
+  --bg: #ffffff;
+  --surface: #fafafd;
+  --danger: #d4537e;
+  --warn: #ef9f27;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 28px;
+  height: 60px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; }
+.dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--purple));
+}
+.nav { display: flex; gap: 4px; }
+.nav button {
+  border: 0; background: transparent; cursor: pointer;
+  padding: 7px 14px; border-radius: 8px; font-size: 14px;
+  color: var(--muted); font-family: inherit;
+  transition: background .18s ease, color .18s ease;
+}
+.nav button:hover { background: var(--surface); color: var(--ink); }
+.nav button.on { background: var(--purple-soft); color: var(--purple); }
+.spacer { flex: 1; }
+.btn {
+  border: 1px solid var(--line); background: #fff; cursor: pointer;
+  padding: 7px 15px; border-radius: 8px; font-size: 13px;
+  font-family: inherit; color: var(--ink);
+  transition: border-color .18s ease, background .18s ease;
+}
+.btn:hover { border-color: var(--purple); background: var(--purple-soft); }
+.btn.primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+.btn.primary:hover { background: #44389c; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 26px 28px 60px; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 26px; }
+.card {
+  border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+  background: var(--surface);
+}
+.card .k { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.card .v { font-size: 26px; font-weight: 500; letter-spacing: -.5px; }
+.card .s { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.panel {
+  border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 22px;
+}
+.panel h3 {
+  margin: 0; padding: 13px 18px; font-size: 14px; font-weight: 500;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.panel .body { padding: 16px 18px; }
+.empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+.empty code {
+  display: inline-block; margin-top: 12px; padding: 8px 14px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  font-size: 12px; color: var(--purple);
+}
+.row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+  transition: background .15s ease;
+}
+.row:hover { background: var(--purple-soft); }
+.row .tag {
+  font-size: 11px; padding: 2px 8px; border-radius: 20px;
+  background: var(--green-soft); color: var(--green); white-space: nowrap;
+}
+.row .tag.bad { background: #fce9f1; color: var(--danger); }
+.row .msg { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.detail { padding: 18px; }
+.detail pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px; overflow: auto; font-size: 12px; line-height: 1.7; margin: 0 0 16px;
+}
+.crumb { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+.crumb .t { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.crumb .c {
+  font-size: 11px; padding: 1px 7px; border-radius: 20px;
+  background: var(--purple-soft); color: var(--purple); white-space: nowrap;
+}
+canvas { display: block; width: 100%; }
+.hint { color: var(--muted); font-size: 12px; padding: 10px 18px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="./bundle.js"></script>
+</body>
+</html>

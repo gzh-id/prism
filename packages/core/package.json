@@ -1,0 +1,33 @@
+{
+  "name": "@prism/core",
+  "version": "0.1.0",
+  "description": "零依赖的前端可观测性采集内核，gzip < 8KB",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "unpkg": "./dist/index.global.js",
+  "sideEffects": false,
+  "files": ["dist"],
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@prism/shared": "*",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "rollup": "^4.52.5",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
+  }
+}

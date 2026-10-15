@@ -1,0 +1,35 @@
+{
+  "name": "prism",
+  "version": "0.1.0",
+  "private": true,
+  "description": "零后端、隐私优先的前端可观测性工具",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@prism/core && npm run build --workspace=@prism/dashboard",
+    "build:core": "npm run build --workspace=@prism/core",
+    "build:dashboard": "npm run build --workspace=@prism/dashboard",
+    "serve": "node scripts/serve.mjs",
+    "sample": "node scripts/make-sample-report.mjs",
+    "demo:assets": "node scripts/make-demo-assets.mjs",
+    "fix:cmd-eol": "node scripts/fix-cmd-eol.mjs start-demo.cmd",
+    "walkthrough": "node scripts/make-walkthrough.mjs",
+    "walkthrough:check": "node scripts/check-walkthrough.mjs",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "node --test packages/core/test/*.test.mjs",
+    "size": "node scripts/check-size.mjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "rollup": "^4.52.5",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

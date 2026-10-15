@@ -1,0 +1,20 @@
+{
+  "name": "@prism/cli",
+  "version": "0.1.0",
+  "description": "把压缩后的堆栈还原成源码位置",
+  "type": "module",
+  "bin": {
+    "prism": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "source-map": "^0.7.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3"
+  }
+}

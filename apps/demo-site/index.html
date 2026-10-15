@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prism 演示站点 · 故意做坏的页面</title>
+<style>
+body {
+  margin: 0; font-family: -apple-system, "Segoe UI", "PingFang SC", sans-serif;
+  padding: 40px; max-width: 800px; margin: 0 auto; line-height: 1.7; color: #1a1a1a;
+}
+h1 { font-size: 22px; font-weight: 500; }
+.lead { color: #6b7280; margin-bottom: 28px; }
+button {
+  border: 1px solid #ddd; background: #fff; padding: 10px 18px; border-radius: 8px;
+  cursor: pointer; margin: 0 8px 8px 0; font-size: 14px; font-family: inherit;
+}
+button:hover { border-color: #534ab7; background: #eeedfe; }
+button.primary {
+  border-color: #1d9e75; background: #1d9e75; color: #fff;
+}
+button.primary:hover { background: #0f6e56; border-color: #0f6e56; }
+button.ghost { border-color: #eee; color: #6b7280; }
+.hero {
+  height: 180px; border-radius: 12px; margin: 20px 0; display: flex;
+  align-items: center; justify-content: center; color: #fff; font-size: 15px;
+  background: linear-gradient(135deg, #1d9e75, #534ab7);
+}
+.section-title {
+  font-size: 13px; color: #6b7280; margin: 28px 0 10px;
+  text-transform: none; letter-spacing: 0;
+}
+.note { background: #fafafd; border: 1px solid #eee; padding: 14px 18px; border-radius: 10px; font-size: 13px; color: #6b7280; margin-top: 30px; }
+.note ol { margin: 8px 0 0; padding-left: 20px; }
+.note li { margin-bottom: 4px; }
+code { background: #f2f2f7; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+#status { font-size: 13px; color: #0f6e56; min-height: 22px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h1>Prism 演示站点</h1>
+<p class="lead">这个页面故意留有各种问题。点下面的按钮制造数据，然后去看板查看。</p>
+
+<div class="hero">首屏大区块（LCP 元素）</div>
+
+<div class="section-title">第一步 · 选几个按钮点一遍</div>
+<button onclick="throwJsError()">抛一个 JS 错误</button>
+<button onclick="throwAsyncError()">抛一个未处理的 Promise</button>
+<button onclick="loadMissingImage()">加载一张不存在的图片</button>
+<button onclick="slowRequest()">发一个慢请求</button>
+<button onclick="triggerBlank()">模拟白屏</button>
+<button class="ghost" onclick="manualCapture()">手动上报一条</button>
+
+<div class="section-title">第二步 · 打开看板看结果</div>
+<button class="primary" onclick="openDashboard()">打开看板查看</button>
+<button class="ghost" onclick="clearData()">清空本地数据</button>
+<div id="status"></div>
+
+<div class="note">
+  <b>怎么玩</b>
+  <ol>
+    <li>先在这个页面点几个上面的按钮（每个操作都会被记成「面包屑」）</li>
+    <li>点绿色的「打开看板查看」</li>
+    <li>看板四个 Tab：概览 / 错误 / 性能 / 网络，分别点开看看</li>
+    <li>想从头演示一遍，回来点「清空本地数据」</li>
+  </ol>
+  <br />
+  所有数据存在浏览器本地的 IndexedDB 里，<b>不会发往任何服务器</b>。
+  演示站点和看板必须在<b>同一个域名</b>下打开才能共享数据 —— 用
+  <code>npm run serve</code> 启动本地服务，别直接双击 HTML 文件。
+</div>
+
+<!-- 本地生成的图（129KB）。刻意保留一定体积，这样网络瀑布图的 download 段看得见 -->
+<img
+  id="hero-img"
+  src="assets/hero-banner.png"
+  alt="演示大图"
+  style="width: 100%; border-radius: 12px; margin-top: 16px"
+/>
+
+<script src="../../packages/core/dist/index.global.js"></script>
+<script>
+  // 初始化：启用全部插件。真实项目里可以按需只引其中几个
+  Prism.init({
+    release: 'demo-1.0.0',
+    environment: 'demo',
+    debug: true,
+    integrations: [
+      Prism.errorsIntegration(),
+      Prism.webVitalsIntegration(),
+      Prism.networkIntegration(),
+      Prism.breadcrumbsIntegration(),
+    ],
+  });
+
+  function status_(text) {
+    document.getElementById('status').textContent = text;
+  }
+
+  function throwJsError() {
+    // 故意访问 undefined 的属性，产生一个真实的 TypeError
+    const obj = null;
+    console.log(obj.user.name);
+  }
+
+  function throwAsyncError() {
+    Promise.reject(new Error('异步任务失败了：订单状态同步超时'));
+  }
+
+  function loadMissingImage() {
+    const img = document.createElement('img');
+    img.src = '/this-image-does-not-exist.png';
+    document.body.appendChild(img);
+  }
+
+  function slowRequest() {
+    // 服务端会延迟 1.2 秒返回，用来在瀑布图上造出一条肉眼可见的长条
+    fetch('/api/slow-report?token=abcdef' + Math.random())
+      .then(function (r) { return r.text(); })
+      .catch(function () {});
+  }
+
+  function triggerBlank() {
+    document.body.innerHTML = '';
+  }
+
+  function manualCapture() {
+    // 业务代码里 try/catch 住的错误不会被全局监听捕获，需要手动上报
+    Prism.captureException(new Error('手动上报：优惠券计算异常'), {
+      severity: 'warning',
+    });
+    status_('已上报一条 warning 级错误，去「错误」页能看到它');
+  }
+
+  async function openDashboard() {
+    // IndexedDB 写入是异步的。不等它完成就跳走，看板可能读到旧数据，
+    // 所以这里 await flushAsync()，写入真正完成再开新标签页。
+    status_('正在写入本地数据…');
+    await Prism.flushAsync();
+    status_('写入完成，看板已打开');
+    window.open('../dashboard/dist/index.html', '_blank');
+  }
+
+  async function clearData() {
+    await Prism.clearEvents();
+    status_('本地数据已清空，重新点按钮就能从头演示');
+  }
+</script>
+</body>
+</html>
