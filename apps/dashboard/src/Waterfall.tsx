@@ -16,6 +16,25 @@ const ROW_HEIGHT = 24;
 const HEADER = 34;
 const LABEL_WIDTH = 210;
 
+/** 按像素宽度截断文本，避免长 URL 溢出标签列并与耗时重叠。 */
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+  if (ctx.measureText(text).width <= maxWidth) {
+    return text;
+  }
+  const ellipsis = '…';
+  let low = 0;
+  let high = text.length;
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2);
+    if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxWidth) {
+      low = mid;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return text.slice(0, low) + ellipsis;
+}
+
 const SEGMENTS = [
   { key: 'dns', label: 'DNS', color: '#b4b2a9' },
   { key: 'tcp', label: 'TCP', color: '#378add' },
@@ -74,7 +93,7 @@ export function Waterfall({ events }: Props): React.ReactElement {
       // 左侧：URL 与耗时
       ctx.fillStyle = event.ok ? '#1a1a1a' : '#d4537e';
       ctx.textAlign = 'left';
-      const label = event.url.replace(/^https?:\/\//, '').slice(0, 34);
+      const label = fitText(ctx, event.url.replace(/^https?:\/\//, ''), LABEL_WIDTH - 70);
       ctx.fillText(label, 10, y + ROW_HEIGHT / 2);
 
       ctx.fillStyle = '#6b7280';
@@ -106,11 +125,14 @@ export function Waterfall({ events }: Props): React.ReactElement {
 
     // 顶部时间刻度
     ctx.fillStyle = '#6b7280';
-    ctx.textAlign = 'center';
     for (let i = 0; i <= 4; i += 1) {
       const value = (total * i) / 4;
       const x = LABEL_WIDTH + value * scale;
-      ctx.fillText(`${Math.round(value)}ms`, x, HEADER / 2);
+      ctx.textAlign = i === 0 ? 'left' : i === 4 ? 'right' : 'center';
+      const tick = total >= 10_000
+        ? `${(value / 1000).toFixed(1)}s`
+        : `${Math.round(value)}ms`;
+      ctx.fillText(tick, x, HEADER / 2);
       ctx.strokeStyle = '#f2f2f7';
       ctx.beginPath();
       ctx.moveTo(x, HEADER - 6);
