@@ -125,7 +125,9 @@ requests.forEach((request, index) => {
     ...BASE,
     id: `n-${index}`,
     type: 'network',
-    timestamp: now - (6 - index) * 30_000,
+    // 瀑布图按绝对开始时间绘制，样本请求必须落在同一次页面加载的时间窗内，
+    // 否则几个请求会被摊到几分钟，单个慢请求把其余条形压扁。
+    timestamp: now - 6_000 + index * 700,
     url: request.url,
     method: request.method,
     status: request.status,

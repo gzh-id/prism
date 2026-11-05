@@ -19,7 +19,9 @@ const here = dirname(fileURLToPath(import.meta.url));
  */
 const copyHtml = {
   name: 'copy-html',
-  buildEnd() {
+  // 必须用 writeBundle：buildEnd 阶段 dist/bundle.js 还没落盘，
+  // 这里读到的会是上一次构建的旧 bundle，导致单文件报告慢一版。
+  writeBundle() {
     const html = readFileSync(resolve(here, 'index.html'), 'utf-8');
     copyFileSync(resolve(here, 'index.html'), resolve(here, 'dist/index.html'));
 
