@@ -7,6 +7,20 @@
 
 一个 6.07KB 的零依赖采集 SDK + 一个纯本地运行的 React 分析看板。**数据全程不出浏览器**，存在 IndexedDB 里，需要分享时导出成一份压缩报告。
 
+## 界面
+
+| 概览 | 错误 |
+| --- | --- |
+| ![概览](docs/screenshots/01-overview.png) | ![错误](docs/screenshots/02-errors.png) |
+
+| 性能 | 网络 |
+| --- | --- |
+| ![性能](docs/screenshots/03-performance.png) | ![网络](docs/screenshots/04-network.png) |
+
+性能页展示 FCP / LCP / CLS / INP / TTFB 趋势；网络页的资源瀑布图把「慢」拆成 DNS / TCP / SSL / 等待响应 / 下载五段。
+
+截图来自仓库根目录的 `sample-report.html`，不依赖本地服务，断网也能直接打开。
+
 ## 它解决什么问题
 
 中小团队想给线上项目接前端监控，但卡在三个地方：

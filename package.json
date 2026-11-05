@@ -19,7 +19,8 @@
     "walkthrough:check": "node scripts/check-walkthrough.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "node --test packages/core/test/*.test.mjs",
-    "size": "node scripts/check-size.mjs"
+    "size": "node scripts/check-size.mjs",
+    "verify": "node scripts/verify.mjs"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
